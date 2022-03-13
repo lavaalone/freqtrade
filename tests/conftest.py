@@ -107,6 +107,8 @@ def patch_exchange(mocker, api_mock=None, id='binance', mock_markets=True) -> No
         mocker.patch('freqtrade.exchange.Exchange._init_ccxt', MagicMock(return_value=api_mock))
     else:
         mocker.patch('freqtrade.exchange.Exchange._init_ccxt', MagicMock())
+        mocker.patch('freqtrade.exchange.Exchange.timeframes', PropertyMock(
+                return_value=['5m', '15m', '1h', '1d']))
 
 
 def get_patched_exchange(mocker, config, api_mock=None, id='binance',
@@ -201,6 +203,9 @@ def create_mock_trades(fee, use_db: bool = True):
     """
     Create some fake trades ...
     """
+    if use_db:
+        Trade.query.session.rollback()
+
     def add_trade(trade):
         if use_db:
             Trade.query.session.add(trade)
@@ -1221,7 +1226,7 @@ def limit_sell_order_open():
         'id': 'mocked_limit_sell',
         'type': 'limit',
         'side': 'sell',
-        'pair': 'mocked',
+        'symbol': 'mocked',
         'datetime': arrow.utcnow().isoformat(),
         'timestamp': arrow.utcnow().int_timestamp,
         'price': 0.00001173,
@@ -2208,7 +2213,7 @@ def limit_sell_order_usdt_open():
         'id': 'mocked_limit_sell_usdt',
         'type': 'limit',
         'side': 'sell',
-        'pair': 'mocked',
+        'symbol': 'mocked',
         'datetime': arrow.utcnow().isoformat(),
         'timestamp': arrow.utcnow().int_timestamp,
         'price': 2.20,
