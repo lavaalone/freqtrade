@@ -516,6 +516,8 @@ class FreqtradeBot(LoggingMixin):
         :return: True if a buy order is created, false if it fails.
         """
 
+        logger.info(f"### execute_entry.. received force buy request: buy_tag = {buy_tag}")
+
         pos_adjust = trade is not None
 
         enter_limit_requested, stake_amount = self.get_valid_enter_price_and_stake(
