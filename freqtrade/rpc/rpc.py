@@ -720,9 +720,6 @@ class RPC:
         Buys a pair trade at the given or current price
         """
 
-        logger.info(f"### _rpc_forcebuy.. received force buy request: pair = {pair}")
-        logger.info(f"### _rpc_forcebuy.. received force buy request: buy_tag = {buy_tag}")
-
         if not self._freqtrade.config.get('forcebuy_enable', False):
             raise RPCException('Forcebuy not enabled.')
 
